@@ -1,10 +1,29 @@
 package controllers
 
-import "net/http"
+import (
+	"api/src/banco"
+	"api/src/entities"
+	"encoding/json"
+	"io"
+	"log"
+	"net/http"
+)
 
 // CriarUsuario insere um usuario no banco de dados
 func CriarUsuario(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Criando usuário!"))
+	corpoRequest, erro := io.ReadAll(r.Body)
+	if erro != nil {
+		log.Fatal(erro)
+	}
+
+	var usuario entities.Usuario
+	if erro = json.Unmarshal(corpoRequest, &usuario); erro != nil {
+		log.Fatal(erro)
+	}
+	db, erro := banco.Conectar()
+	if erro != nil {
+		log.Fatal(erro)
+	}
 }
 
 // BuscarUsuarios busca os usuarios do banco de dados
