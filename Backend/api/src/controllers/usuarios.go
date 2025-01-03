@@ -32,6 +32,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	if erro != nil {
 		log.Fatal(erro)
 	}
+	defer db.Close()
 	w.Write([]byte(fmt.Sprintf("Id inserido: %d", usuarioID)))
 }
 
