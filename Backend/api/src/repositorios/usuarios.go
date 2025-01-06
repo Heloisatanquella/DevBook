@@ -3,6 +3,7 @@ package repositorios
 import (
 	"api/src/entities"
 	"database/sql"
+	"fmt"
 )
 
 // usuarios representa um repositorio de usuarios
@@ -36,4 +37,39 @@ func (repositorio usuarios) Criar(usuario entities.Usuario) (uint64, error) {
 	}
 
 	return uint64(ultimoIDInserido), nil
+}
+
+// Buscar traz todos os usuários que atendem um filtro de nome ou nick
+func (respositorio usuarios) Buscar(nomeOuNick string) ([]entities.Usuario, error) {
+	nomeOuNick = fmt.Sprintf("%%%s%%", nomeOuNick) // %nomeOuNick%
+
+	linhas, erro := respositorio.db.Query(
+		"select id, nome, nick, email, criadoEm from usuarios where nome LIKE ? or nick LIKE ?",
+		nomeOuNick, nomeOuNick,
+	)
+
+	if erro != nil {
+		return nil, erro
+	}
+
+	defer linhas.Close()
+
+	var usuarios []entities.Usuario
+
+	for linhas.Next() {
+		var usuario entities.Usuario
+
+		if erro = linhas.Scan(
+			&usuario.ID,
+			&usuario.Nome,
+			&usuario.Nick,
+			&usuario.Email,
+			&usuario.CriadoEm,
+		); erro != nil {
+			return nil, erro
+		}
+		usuarios = append(usuarios, usuario)
+	}
+	return usuarios, nil
+
 }
