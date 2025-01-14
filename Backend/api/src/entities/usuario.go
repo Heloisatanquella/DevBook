@@ -61,7 +61,9 @@ func (usuario *Usuario) formatar(etapa string) error {
 		if erro != nil {
 			return erro
 		}
+
 		usuario.Senha = string(senhaComHash)
 	}
+
 	return nil
 }
