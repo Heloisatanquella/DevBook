@@ -13,5 +13,10 @@ func main() {
 	utils.CarregarTemplates()
 
 	r := router.Gerar()
+
+	// Servir os arquivos estáticos corretamente
+	fileServer := http.FileServer(http.Dir("./webapp/assets"))
+	http.Handle("/assets/", http.StripPrefix("/assets/", fileServer))
+
 	log.Fatal(http.ListenAndServe(":3000", r))
 }

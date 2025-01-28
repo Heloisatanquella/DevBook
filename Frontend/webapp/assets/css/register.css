@@ -32,7 +32,7 @@ input::placeholder {
     color: #8f8fa1;
 }
 
-.container-login {
+.container-register {
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -42,7 +42,7 @@ input::placeholder {
     padding: 15px;
 }
 
-.container-login > div {
+.container-register > div {
     width: 390px;
     background: #fff;
     border-radius: 10px;
