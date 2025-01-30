@@ -18,5 +18,5 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./webapp/assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fileServer))
 
-	log.Fatal(http.ListenAndServe(":3000", r))
+	log.Fatal(http.ListenAndServe(":4000", r))
 }

@@ -7,9 +7,14 @@ import (
 
 var rotasUsuarios = []Rota{
 	{
-		URI:                "/register",
+		URI:                "/cadastro",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.CarregarTelaCadastro,
+		RequerAutenticacao: false,
+	}, {
+		URI:                "/usuarios",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.CriarUsuario,
 		RequerAutenticacao: false,
 	},
 }

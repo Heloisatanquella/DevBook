@@ -1,21 +1,22 @@
+// $(document).ready(function () {
+// });
 $('#register-form').on('submit', criarUsuario);
 
 function criarUsuario(evento) {
     evento.preventDefault();
-    console.log("funcionou")
 
     if ($('#senha').val() != $('#confirmar-senha').val()) {
-        alert("As senha não coincidem!")
-        return
+        Swal.fire("Ops...", "As senhas não coincidem!", "error");
+        return;
     }
     $.ajax({
-        url: "/users",
+        url: "/usuarios",
         method: "POST",
         data: {
-            name: ('#nome').val(),
-            email: ('#email').val(),
-            nick: ('#nick').val(),
-            password: ('#senha').val(),
+           nome: $('#nome').val(), 
+           email: $('#email').val(),
+           nick: $('#nick').val(),
+           senha: $('#senha').val()
         }
     })
 }
