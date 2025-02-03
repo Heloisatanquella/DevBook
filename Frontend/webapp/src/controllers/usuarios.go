@@ -3,31 +3,51 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
+	"time"
+	"webapp/src/respostas"
 )
 
-// CriarUsuario chama a API para cadastrar um usuario no banco de dados
-func CriarUsuario(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+// Cliente HTTP reutilizável
+var httpClient = &http.Client{
+	Timeout: time.Second * 10,
+	Transport: &http.Transport{
+		MaxIdleConns:        100,
+		MaxIdleConnsPerHost: 10,
+	},
+}
 
-	usuario, erro := json.Marshal(map[string]string{
+// CriarUsuario chama a API para cadastrar um usuário no banco de dados
+func CriarUsuario(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		respostas.JSON(w, http.StatusBadRequest, map[string]string{"erro": "Erro ao processar formulário"})
+		return
+	}
+
+	usuario, err := json.Marshal(map[string]string{
 		"nome":  r.FormValue("nome"),
 		"email": r.FormValue("email"),
 		"nick":  r.FormValue("nick"),
 		"senha": r.FormValue("senha"),
 	})
-
-	if erro != nil {
-		log.Fatal(erro)
+	if err != nil {
+		respostas.JSON(w, http.StatusInternalServerError, map[string]string{"erro": "Erro ao converter JSON"})
+		return
 	}
 
-	response, erro := http.Post("http://localhost:5000/usuarios", "application/json", bytes.NewBuffer(usuario))
-	if erro != nil {
-		log.Fatal(erro)
+	req, err := http.NewRequest("POST", "http://localhost:5000/usuarios", bytes.NewBuffer(usuario))
+	if err != nil {
+		respostas.JSON(w, http.StatusInternalServerError, map[string]string{"erro": "Erro ao criar requisição"})
+		return
 	}
-	defer response.Body.Close()
+	req.Header.Set("Content-Type", "application/json")
 
-	fmt.Println(response.Body)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		respostas.JSON(w, http.StatusServiceUnavailable, map[string]string{"erro": "Erro ao conectar com o servidor"})
+		return
+	}
+	defer resp.Body.Close()
+
+	respostas.JSON(w, resp.StatusCode, nil)
 }
