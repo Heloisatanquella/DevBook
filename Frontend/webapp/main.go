@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 	"webapp/src/router"
 	"webapp/src/utils"
 )
@@ -14,9 +15,15 @@ func main() {
 
 	r := router.Gerar()
 
-	// Servir os arquivos estáticos corretamente
-	fileServer := http.FileServer(http.Dir("./webapp/assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", fileServer))
+	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./webapp/assets"))))
 
-	log.Fatal(http.ListenAndServe(":4000", r))
+	server := &http.Server{
+		Addr:         ":6001",
+		Handler:      r,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	log.Fatal(server.ListenAndServe())
 }
