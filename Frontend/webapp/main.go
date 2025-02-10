@@ -18,7 +18,7 @@ func main() {
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./webapp/assets"))))
 
 	server := &http.Server{
-		Addr:         ":6001",
+		Addr:         ":8080",
 		Handler:      r,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
