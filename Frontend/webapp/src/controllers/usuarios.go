@@ -3,8 +3,10 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
+	"webapp/src/config"
 	"webapp/src/respostas"
 )
 
@@ -35,7 +37,8 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req, err := http.NewRequest("POST", "http://localhost:5000/usuarios", bytes.NewBuffer(usuario))
+	url := fmt.Sprintf("%s/usuarios", config.APIURL)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(usuario))
 	if err != nil {
 		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
 		return
@@ -47,13 +50,12 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
 		return
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
 		respostas.TratarStatusCodeDeErro(w, resp)
 		return
 	}
-
-	defer resp.Body.Close()
 
 	respostas.JSON(w, resp.StatusCode, nil)
 }

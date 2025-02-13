@@ -3,14 +3,19 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"webapp/src/config"
 	"webapp/src/entities"
 	"webapp/src/respostas"
 )
 
 // FazerLogin utiliza o e-mail e senha do usuário para autenticar na aplicação
 func FazerLogin(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	if err := r.ParseForm(); err != nil {
+		respostas.JSON(w, http.StatusBadRequest, map[string]string{"erro": "Erro ao processar formulário"})
+		return
+	}
 
 	usuario, erro := json.Marshal(map[string]string{
 		"email": r.FormValue("email"),
@@ -22,20 +27,28 @@ func FazerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, erro := http.Post("http://localhost:5000/login", "application/json", bytes.NewBuffer(usuario))
-	if erro != nil {
-		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: erro.Error()})
+	url := fmt.Sprintf("%s/login", config.APIURL)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(usuario))
+	if err != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
 		return
 	}
-	defer response.Body.Close()
+	req.Header.Set("Content-Type", "application/json")
 
-	if response.StatusCode >= 400 {
-		respostas.TratarStatusCodeDeErro(w, response)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		respostas.TratarStatusCodeDeErro(w, resp)
 		return
 	}
 
 	var dadosAutenticacao entities.DadosAutenticacao
-	if erro := json.NewDecoder(response.Body).Decode(&dadosAutenticacao); erro != nil {
+	if erro := json.NewDecoder(resp.Body).Decode(&dadosAutenticacao); erro != nil {
 		respostas.JSON(w, http.StatusUnprocessableEntity, respostas.ErroAPI{Erro: erro.Error()})
 		return
 	}
