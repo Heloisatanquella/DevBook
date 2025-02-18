@@ -4,7 +4,7 @@ function fazerLogin(evento) {
     evento.preventDefault();
 
     $.ajax({
-        url: "http://localhost:5000/login",
+        url: "/login",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({

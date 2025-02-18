@@ -5,57 +5,41 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 	"webapp/src/config"
 	"webapp/src/respostas"
 )
 
-// Cliente HTTP reutilizável
-var httpClient = &http.Client{
-	Timeout: time.Second * 10,
-	Transport: &http.Transport{
-		MaxIdleConns:        100,
-		MaxIdleConnsPerHost: 10,
-	},
-}
-
-// CriarUsuario chama a API para cadastrar um usuário no banco de dados
 func CriarUsuario(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		respostas.JSON(w, http.StatusBadRequest, map[string]string{"erro": "Erro ao processar formulário"})
+	var usuario map[string]string
+
+	if err := json.NewDecoder(r.Body).Decode(&usuario); err != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Erro ao ler JSON da requisição"})
 		return
 	}
 
-	usuario, err := json.Marshal(map[string]string{
-		"nome":  r.FormValue("nome"),
-		"email": r.FormValue("email"),
-		"nick":  r.FormValue("nick"),
-		"senha": r.FormValue("senha"),
-	})
-	if err != nil {
-		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: err.Error()})
+	if usuario["nome"] == "" || usuario["email"] == "" || usuario["nick"] == "" || usuario["senha"] == "" {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Todos os campos são obrigatórios"})
+		return
+	}
+
+	usuarioJSON, erro := json.Marshal(usuario)
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao converter JSON"})
 		return
 	}
 
 	url := fmt.Sprintf("%s/usuarios", config.APIURL)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(usuario))
-	if err != nil {
-		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
+	response, erro := http.Post(url, "application/json", bytes.NewBuffer(usuarioJSON))
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao enviar requisição"})
 		return
 	}
-	req.Header.Set("Content-Type", "application/json")
+	defer response.Body.Close()
 
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 400 {
-		respostas.TratarStatusCodeDeErro(w, resp)
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCodeDeErro(w, response)
 		return
 	}
 
-	respostas.JSON(w, resp.StatusCode, nil)
+	respostas.JSON(w, response.StatusCode, nil)
 }
