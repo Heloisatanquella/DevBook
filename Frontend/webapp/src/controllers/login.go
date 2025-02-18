@@ -6,51 +6,55 @@ import (
 	"fmt"
 	"net/http"
 	"webapp/src/config"
+	"webapp/src/cookies"
 	"webapp/src/entities"
 	"webapp/src/respostas"
 )
 
 // FazerLogin utiliza o e-mail e senha do usuário para autenticar na aplicação
 func FazerLogin(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		respostas.JSON(w, http.StatusBadRequest, map[string]string{"erro": "Erro ao processar formulário"})
+	var usuario map[string]string
+
+	if err := json.NewDecoder(r.Body).Decode(&usuario); err != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Erro ao ler JSON da requisição"})
 		return
 	}
 
-	usuario, erro := json.Marshal(map[string]string{
-		"email": r.FormValue("email"),
-		"senha": r.FormValue("senha"),
-	})
+	if usuario["email"] == "" || usuario["senha"] == "" {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Todos os campos são obrigatórios"})
+		return
+	}
 
+	usuarioJSON, erro := json.Marshal(usuario)
 	if erro != nil {
-		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao converter JSON"})
 		return
 	}
 
 	url := fmt.Sprintf("%s/login", config.APIURL)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(usuario))
-	if err != nil {
-		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
+	response, erro := http.Post(url, "application/json", bytes.NewBuffer(usuarioJSON))
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: erro.Error()})
 		return
 	}
-	req.Header.Set("Content-Type", "application/json")
+	defer response.Body.Close()
 
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: err.Error()})
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 400 {
-		respostas.TratarStatusCodeDeErro(w, resp)
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCodeDeErro(w, response)
 		return
 	}
 
 	var dadosAutenticacao entities.DadosAutenticacao
-	if erro := json.NewDecoder(resp.Body).Decode(&dadosAutenticacao); erro != nil {
+	if erro = json.NewDecoder(response.Body).Decode(&dadosAutenticacao); erro != nil {
 		respostas.JSON(w, http.StatusUnprocessableEntity, respostas.ErroAPI{Erro: erro.Error()})
 		return
 	}
+
+	if erro = cookies.Salvar(w, dadosAutenticacao.ID, dadosAutenticacao.Token); erro != nil {
+		respostas.JSON(w, http.StatusUnprocessableEntity, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, nil)
 
 }

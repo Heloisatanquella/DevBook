@@ -8,8 +8,9 @@ function criarUsuario(evento) {
         alert("Ops...as senhas não coincidem!");
         return;
     }
+
     $.ajax({
-        url: "http://localhost:5000/usuarios",
+        url: "/usuarios",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({

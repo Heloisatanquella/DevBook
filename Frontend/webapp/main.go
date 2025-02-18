@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-	"time"
 	"webapp/src/config"
 	"webapp/src/cookies"
 	"webapp/src/router"
@@ -15,22 +13,9 @@ import (
 func main() {
 	config.Carregar()
 	cookies.Configurar()
-	fmt.Printf("Rodando WebApp na porta %d\n", config.Porta)
 	utils.CarregarTemplates()
-
 	r := router.Gerar()
 
-	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./webapp/assets"))))
-
-	Porta := ":" + strconv.Itoa(config.Porta)
-
-	server := &http.Server{
-		Addr:         Porta,
-		Handler:      r,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		IdleTimeout:  120 * time.Second,
-	}
-
-	log.Fatal(server.ListenAndServe())
+	fmt.Printf("Escutando na porta %d\n", config.Porta)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Porta), r))
 }
