@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +7,13 @@
     <title>Home</title>
 </head>
 <body>
-    <h2>Página Principal</h2>
+    <h2>Home</h2>
+
+    {{ range . }}
+        <h4> Título: {{ .Titulo }} </h4>
+        <h4> Conteúdo: {{ .Conteudo }} </h4>
+
+        <hr>
+    {{ end }}
 </body>
 </html>
