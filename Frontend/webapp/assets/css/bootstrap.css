@@ -2546,6 +2546,7 @@ fieldset:disabled a.btn {
   color: #fff;
   background-color: #007bff;
   border-color: #007bff;
+  margin-bottom: 1rem;
 }
 
 .btn-primary:hover {
@@ -4527,6 +4528,7 @@ input[type="button"].btn-block {
     display: flex !important;
     -ms-flex-preferred-size: auto;
     flex-basis: auto;
+    justify-content: space-between;
   }
   .navbar-expand-lg .navbar-toggler {
     display: none;
