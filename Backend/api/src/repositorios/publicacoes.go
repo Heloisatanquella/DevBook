@@ -73,13 +73,15 @@ func (repositorio Publicacoes) BuscarPorID(publicacaoID uint64) (entities.Public
 // Buscar traz as publicações dos usuários seguidos e também do próprio usuário que fez a requisição
 func (repositorio Publicacoes) Buscar(usuarioID uint64) ([]entities.Publicacao, error) {
 	linhas, erro := repositorio.db.Query(`
-	select distinct p.*, u.nick from publicacoes p 
-	inner join usuarios u on u.id = p.autor_id 
-	inner join seguidores s on p.autor_id = s.usuario_id 
-	where u.id = ? or s.seguidor_id = ?
-	order by 1 desc`,
-		usuarioID, usuarioID,
-	)
+    SELECT DISTINCT p.*, u.nick 
+    FROM publicacoes p 
+    INNER JOIN usuarios u ON u.id = p.autor_id 
+    LEFT JOIN seguidores s ON p.autor_id = s.usuario_id 
+    AND s.seguidor_id = ?
+    WHERE u.id = ? OR s.seguidor_id IS NOT NULL -- Adicionando a condição para incluir as próprias publicações
+    ORDER BY p.id DESC;
+	`, usuarioID, usuarioID) // Agora os dois "?" são usados corretamente
+
 	if erro != nil {
 		return nil, erro
 	}
