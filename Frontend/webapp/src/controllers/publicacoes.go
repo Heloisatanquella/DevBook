@@ -108,21 +108,14 @@ func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var publicacao map[string]string
-
-	if err := json.NewDecoder(r.Body).Decode(&publicacao); err != nil {
-		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Erro ao ler JSON da requisição"})
-		return
-	}
-
-	publicacaoJSON, erro := json.Marshal(publicacao)
-	if erro != nil {
-		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao converter JSON"})
-		return
-	}
+	r.ParseForm()
+	publicacao, _ := json.Marshal(map[string]string{
+		"titulo":   r.FormValue("titulo"),
+		"conteudo": r.FormValue("conteudo"),
+	})
 
 	url := fmt.Sprintf("%s/publicacoes/%d", config.APIURL, publicacaoID)
-	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodPut, url, bytes.NewBuffer(publicacaoJSON))
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodPut, url, bytes.NewBuffer(publicacao))
 	if erro != nil {
 		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: erro.Error()})
 		return
