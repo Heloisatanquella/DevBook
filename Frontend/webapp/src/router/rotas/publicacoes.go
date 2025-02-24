@@ -21,5 +21,10 @@ var rotasPublicacoes = []Rota{
 		Metodo:             http.MethodPost,
 		Funcao:             controllers.DescurtirPublicacao,
 		RequerAutenticacao: true,
+	}, {
+		URI:                "/publicacoes/{publicacaoId}/editar",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.CarregarPaginaEditar,
+		RequerAutenticacao: true,
 	},
 }
