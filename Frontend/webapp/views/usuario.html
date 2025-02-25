@@ -11,6 +11,7 @@
     {{ template "cabecalho" }}
 
     {{ $SeguidoPeloUsuarioLogado := false }}
+    
     {{ range .Usuario.Seguidores }}
     {{ if (eq .ID $.UsuarioLogadoID )}}
     {{ $SeguidoPeloUsuarioLogado = true}}
@@ -36,19 +37,17 @@
                                 Seguindo: {{ len .Usuario.Seguindo }}
                             </a>
                         </p>
-                        <a href="#" class="card-link">
-                            {{ if $SeguidoPeloUsuarioLogado = true }}
-                            <button id="parar-de-seguir" class="btn btn-info" data-usuario-id="{{ .Usuario.ID }}">
-                                Parar de Seguir
-                            </button>
-
-                            {{ else }}
-
-                            <button id="seguir" class="btn btn-info" data-usuario-id="{{ .Usuario.ID }}">
-                                Seguir
-                            </button>
-
-                            {{ end }}
+                            {{ if and (not (eq .Usuario.ID .UsuarioLogadoID)) .SeguidoPeloUsuarioLogado }}
+                            <a href="#" class="card-link">
+                                <button id="parar-de-seguir" class="btn btn-info" data-usuario-id="{{ .Usuario.ID }}">
+                                    Parar de Seguir
+                                </button>
+                        {{ else if not (eq .Usuario.ID .UsuarioLogadoID) }}
+                                <button id="seguir" class="btn btn-info" data-usuario-id="{{ .Usuario.ID }}">
+                                    Seguir
+                                </button>
+                            </a>
+                        {{ end }}
                         </a>
                     </div>
                 </div>
@@ -59,7 +58,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Publicações do Usuário {{ .Usuario.Nick }} </h5>
+                        <h5 class="card-title">Publicações do Usuário {{ .Usuario.Nick }}</h5>
                         <p class="card-text">
                             {{ range .Usuario.Publicacoes }}
                                 {{ template "publicacao-sem-permissao" . }}
