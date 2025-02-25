@@ -141,11 +141,21 @@ func CarregarPerfilDoUsuario(w http.ResponseWriter, r *http.Request) {
 	cookie, _ := cookies.Ler(r)
 	usuarioLogadoID, _ := strconv.ParseUint(cookie["id"], 10, 64)
 
+	seguidoPeloUsuarioLogado := false
+	for _, seguidor := range usuario.Seguidores {
+		if seguidor.ID == usuarioLogadoID {
+			seguidoPeloUsuarioLogado = true
+			break
+		}
+	}
+
 	utils.ExecutarTemplate(w, "usuario.html", struct {
-		Usuario         entities.Usuario
-		UsuarioLogadoID uint64
+		Usuario                  entities.Usuario
+		UsuarioLogadoID          uint64
+		SeguidoPeloUsuarioLogado bool
 	}{
-		Usuario:         usuario,
-		UsuarioLogadoID: usuarioLogadoID,
+		Usuario:                  usuario,
+		UsuarioLogadoID:          usuarioLogadoID,
+		SeguidoPeloUsuarioLogado: seguidoPeloUsuarioLogado,
 	})
 }
