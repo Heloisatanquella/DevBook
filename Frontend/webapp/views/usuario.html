@@ -28,12 +28,12 @@
                             {{ .Usuario.Nome }} - Nickname: {{ .Usuario.Nick }} - Membro desde: {{ .Usuario.CriadoEm.Format "02/01/2006" }}
                         </h6>
                         <p class="card-text">
-                            <a href="#">
+                            <a href="#" data-toggle="modal" data-target="#modal-seguidores">
                                 Seguidores: {{ len .Usuario.Seguidores }}
                             </a>
                         </p>
                         <p class="card-text">
-                            <a href="#">
+                            <a href="#" data-toggle="modal" data-target="#modal-seguindo">
                                 Seguindo: {{ len .Usuario.Seguindo }}
                             </a>
                         </p>
@@ -73,6 +73,8 @@
             </div>
         </div>
     </div>
+    {{ template "modal-seguidores" .Usuario}}
+    {{ template "modal-seguindo" .Usuario}}
     {{ template "rodape" }}
     {{ template "scripts" }}
 
