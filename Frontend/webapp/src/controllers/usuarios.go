@@ -112,3 +112,7 @@ func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
 
 	respostas.JSON(w, response.StatusCode, nil)
 }
+
+// EditarUsuario chama a API para editar os dadosa de um usuario
+func EditarUsuario(w http.ResponseWriter, r *http.Request) {
+}
