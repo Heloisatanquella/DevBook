@@ -163,3 +163,18 @@ func CarregarPerfilDoUsuario(w http.ResponseWriter, r *http.Request) {
 		SeguidoPeloUsuarioLogado: seguidoPeloUsuarioLogado,
 	})
 }
+
+// CarregarPerfilDoUsuarioLogado renderiza a tela de perfil do usuario logado
+func CarregarPerfilDoUsuarioLogado(w http.ResponseWriter, r *http.Request) {
+	cookie, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	usuario, erro := entities.BuscarUsuarioCompleto(usuarioID, r)
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	utils.ExecutarTemplate(w, "perfil.html", usuario)
+
+}
