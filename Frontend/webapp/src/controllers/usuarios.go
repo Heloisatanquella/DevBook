@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"webapp/src/config"
+	"webapp/src/cookies"
 	"webapp/src/requisicoes"
 	"webapp/src/respostas"
 
@@ -115,4 +116,94 @@ func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
 
 // EditarUsuario chama a API para editar os dadosa de um usuario
 func EditarUsuario(w http.ResponseWriter, r *http.Request) {
+	var usuario map[string]string
+
+	if err := json.NewDecoder(r.Body).Decode(&usuario); err != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Erro ao ler JSON da requisição"})
+		return
+	}
+
+	if usuario["nome"] == "" || usuario["email"] == "" || usuario["nick"] == "" {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Todos os campos são obrigatórios"})
+		return
+	}
+
+	usuarioJSON, erro := json.Marshal(usuario)
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao converter JSON"})
+		return
+	}
+	cookie, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	url := fmt.Sprintf("%s/usuarios/%d", config.APIURL, usuarioID)
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodPut, url, bytes.NewBuffer(usuarioJSON))
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao enviar requisição"})
+		return
+	}
+
+	if response.StatusCode != http.StatusNoContent {
+		defer response.Body.Close()
+	}
+
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCodeDeErro(w, response)
+		return
+	}
+
+	if response.StatusCode == http.StatusNoContent {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	respostas.JSON(w, response.StatusCode, nil)
+
+}
+
+// AtualizarSenha chama a API para atualizar a senha do usuario
+func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
+	var senha map[string]string
+
+	if err := json.NewDecoder(r.Body).Decode(&senha); err != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Erro ao ler JSON da requisição"})
+		return
+	}
+
+	if senha["atual"] == "" || senha["nova"] == "" {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: "Todos os campos são obrigatórios"})
+		return
+	}
+
+	senhaJSON, erro := json.Marshal(senha)
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao converter JSON"})
+		return
+	}
+	cookie, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	url := fmt.Sprintf("%s/usuarios/%d/atualizar-senha", config.APIURL, usuarioID)
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodPost, url, bytes.NewBuffer(senhaJSON))
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: "Erro ao enviar requisição"})
+		return
+	}
+
+	if response.StatusCode != http.StatusNoContent {
+		defer response.Body.Close()
+	}
+
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCodeDeErro(w, response)
+		return
+	}
+
+	if response.StatusCode == http.StatusNoContent {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	respostas.JSON(w, response.StatusCode, nil)
+
 }
