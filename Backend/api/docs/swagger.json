@@ -1,0 +1,77 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "DevBook - rede social API",
+      "description": "API para gerenciar usuários e publicações em uma rede social.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "localhost:5000",
+        "description": "Servidor local"
+      }
+    ],
+    "paths": {
+      "/login": {
+        "post": {
+          "tags": ["Autenticação"],
+          "summary": "Autenticar usuário na API",
+          "responses": {
+            "200": { "description": "Token de autenticação gerado e usuário logado" }
+          }
+        }
+      },
+      "/usuarios": {
+        "post": { "tags": ["Usuários"], "summary": "Cadastrar um usuário", "responses": { "201": { "description": "Usuário criado com sucesso" } } },
+        "get": { "tags": ["Usuários"], "summary": "Buscar usuários", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Lista de usuários" } } }
+      },
+      "/usuarios/{usuarioId}": {
+        "get": { "tags": ["Usuários"], "summary": "Buscar usuário por ID","security": [{ "bearerAuth": [] }], "parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "200": { "description": "Dados do usuário" } } },
+        "put": { "tags": ["Usuários"], "summary": "Atualizar usuário", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Usuário atualizado com sucesso" } } },
+        "delete": { "tags": ["Usuários"], "summary": "Deletar usuário", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Usuário deletado com sucesso" } } }
+      },
+      "/usuarios/{usuarioId}/seguir":{
+        "post": { "tags": ["Usuários"], "summary": "Seguir um usuário", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Sucesso ao seguir o usuário" } } }
+      },
+      "/usuarios/{usuarioId}/parar-de-seguir":{
+        "post": { "tags": ["Usuários"], "summary": "Parar de seguir um usuário", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Sucesso ao parar de seguir o usuário" } } }
+      },
+      "/usuarios/{usuarioId}/seguidores":{
+        "get": { "tags": ["Usuários"], "summary": "Buscar os seguidores de um usuário", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "200": { "description": "Lista de seguidores do usuário" } } }
+      },
+      "/usuarios/{usuarioId}/seguindo":{
+        "get": { "tags": ["Usuários"], "summary": "Buscar os usuários que um usuário segue", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "200": { "description": "Lista de quem o usuário está seguindo" } } }
+      },
+      "/usuarios/{usuarioId}/atualizar-senha":{
+        "post": { "tags": ["Usuários"], "summary": "Atualizar senha do usuário logado", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Senha atualizada com sucesso" } } }
+      },
+      "/publicacoes": {
+        "post": { "tags": ["Publicações"], "summary": "Criar uma publicação", "security": [{ "bearerAuth": [] }], "responses": { "201": { "description": "Publicação criada com sucesso" } } },
+        "get": { "tags": ["Publicações"], "summary": "Traz as publicações que apareceriam no feed", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Lista de publicações" } } }
+      },
+      "/publicacoes/{publicacaoId}": {
+        "get": { "tags": ["Publicações"], "summary": "Buscar publicação por ID","security": [{ "bearerAuth": [] }], "parameters": [{ "name": "publicacaoId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "200": { "description": "Dados da publicação" } } },
+        "put": { "tags": ["Publicações"], "summary": "Atualizar publicação", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "publicacaoId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Publicação atualizada com sucesso" } } },
+        "delete": { "tags": ["Publicações"], "summary": "Deletar publicação", "security": [{ "bearerAuth": [] }],"parameters": [{ "name": "publicacaoId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Publicação deletada com sucesso" } } }
+      },
+      "/usuarios/{usuarioId}/publicacoes": {
+        "get": { "tags": ["Publicações"], "summary": "Buscar publicação por usuário","security": [{ "bearerAuth": [] }], "parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "200": { "description": "Lista de publicações" } } }
+      },
+      "/publicacoes/{publicacaoId}/curtir": {
+        "post": { "tags": ["Publicações"], "summary": "Curtir publicação de um usuário","security": [{ "bearerAuth": [] }], "parameters": [{ "name": "publicacaoId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Publicação curtida com sucesso" } } }
+      },
+      "/publicacoes/{publicacaoId}/descurtir": {
+        "post": { "tags": ["Publicações"], "summary": "Descurtir publicação de um usuário","security": [{ "bearerAuth": [] }], "parameters": [{ "name": "publicacaoId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }], "responses": { "204": { "description": "Publicação descurtida com sucesso" } } }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  
