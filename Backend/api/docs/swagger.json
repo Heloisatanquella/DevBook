@@ -1,0 +1,53 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "API de Gerencimanento de Usuários e Publicações",
+      "description": "Documentação da API para gerenciar usuários e publicações.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000",
+        "description": "Servidor local"
+      }
+    ],
+    "paths": {
+      "/login": {
+        "post": {
+          "tags": ["Autenticação"],
+          "summary": "Autenticar usuário",
+          "responses": {
+            "200": { "description": "Token de autenticação gerado" }
+          }
+        }
+      },
+      "/usuarios": {
+        "post": { "tags": ["Usuários"], "summary": "Criar um usuário","security": [{ "bearerAuth": [] }], "responses": { "201": { "description": "Usuário criado com sucesso" } } },
+        "get": { "tags": ["Usuários"], "summary": "Buscar usuários", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Lista de usuários" } } }
+      },
+      "/usuarios/{usuarioId}": {
+        "get": { "tags": ["Usuários"], "summary": "Buscar usuário por ID","security": [{ "bearerAuth": [] }], "parameters": [{ "name": "usuarioId", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Dados do usuário" } } },
+        "put": { "tags": ["Usuários"], "summary": "Atualizar usuário", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Usuário atualizado com sucesso" } } },
+        "delete": { "tags": ["Usuários"], "summary": "Deletar usuário", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Usuário deletado com sucesso" } } }
+      },
+      "/publicacoes": {
+        "post": { "tags": ["Publicações"], "summary": "Criar uma publicação", "security": [{ "bearerAuth": [] }], "responses": { "201": { "description": "Publicação criada com sucesso" } } },
+        "get": { "tags": ["Publicações"], "summary": "Buscar publicações", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Lista de publicações" } } }
+      },
+      "/publicacoes/{publicacaoId}": {
+        "get": { "tags": ["Publicações"], "summary": "Buscar publicação por ID", "parameters": [{ "name": "publicacaoId", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Dados da publicação" } } },
+        "put": { "tags": ["Publicações"], "summary": "Atualizar publicação", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Publicação atualizada com sucesso" } } },
+        "delete": { "tags": ["Publicações"], "summary": "Deletar publicação", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Publicação deletada com sucesso" } } }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  
