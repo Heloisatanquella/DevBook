@@ -6,10 +6,9 @@ Uma aplicação web para gerenciar suas publicações e seu usuário, com a func
 ## 📝 **Índice**
 1. [📋 Sobre o Projeto](#sobre-o-projeto)
 2. [🛠️ Tecnologias Utilizadas](#tecnologias-utilizadas)
-4. [⚙️ Funcionalidades](#funcionalidades)
-5. [🚀 Instalação](#instalação)
-6. [📁 Estrutura de Diretórios](#estrutura-de-diretórios)
-7. [📌 API Endpoints](#api-endpoints)
+3. [⚙️ Funcionalidades](#funcionalidades)
+4. [🚀 Instalação](#instalação)
+5. [📌 API Endpoints](#api-endpoints)
 
 ---
 
@@ -26,6 +25,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
 ## **🛠️ Tecnologias Utilizadas** <a name="tecnologias-utilizadas"></a>
 ### **Frontend**
 - **Linguagem:** [Go](https://go.dev/learn/)
+- **Comunicação com a API:** [jQuery - Ajax](https://go.dev/learn/](https://api.jquery.com/jQuery.ajax/ )
 - **Estilização:** [Bootstrap](https://getbootstrap.com/)
 
 ### **Backend**
@@ -45,17 +45,17 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
   - Atualizar e excluir seu usuário.
   - Seguir e deixar de seguir outros usuários.
 
-  - **Publicações:**
+- **Publicações:**
   - Criar, visualizar, atualizar e excluir suas publicações.
   - Curtir e descurtir outras publicações.
 
-  - **Senha:**
+- **Senha:**
   - Atualização de senha do usuário logado,
 
-  - **Autenticação:**
+- **Autenticação:**
   - Login e geração de tokens JWT.
 
-  - **Segurança:**
+- **Segurança:**
   - Requisições autenticadas com Bearer Token.
 
 - **Feedbacks Visuais:**
@@ -97,75 +97,52 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
  - **Inicie o servidor:** go run main.go
  - **O frontend estará disponível em http://localhost:2000**
 
-### 📁 Estrututa de Diretórios: <a name="estrutura-de-diretórios"></a>
+ 4. Configure as variáveis de ambiente:
+  - Crie um arquivo `.env` com as credenciais do banco de dados MySQL e a chave secreta JWT. Um exemplo de arquivo `.env` seria:
 
-```bash 
-todo-list/
-├── ONBOARDING_HELOISA/
-│   ├── Backend/                      # Backend da aplicação (API em Go)
-│   │   ├── api/                      # Diretório principal da API
-│   │   │   ├── controllers/          # Controladores da aplicação 
-│   │   │   ├── entities/             # Modelos de dados da aplicação
-│   │   │   ├── routes/               # Definição das rotas da API
-│   │   │   ├── swagger.json          # Documentação da API em formato Swagger
-│   │   ├── Dockerfile                # Configuração do Docker para o backend
-│   │   ├── go.mod                    # Dependências do Go
-│   │   ├── go.sum                    # Checksum das dependências
-│   │   ├── main.go                   # Arquivo principal para execução da API
-│   │   ├── todo.db                   # Banco de dados SQLite 
-│   └── Frontend/                     # Frontend da aplicação (Next.js)
-│   │   ├── .next/                    # Arquivos gerados pelo Next.js (build)
-│   │   ├── node_modules/             # Dependências do projeto (yarn)
-│   │   ├── public/                   # Imagens
-│   │   ├── src/                      # Código-fonte da aplicação
-│   │   │   ├── actions/              # Ações para manipulação de estados e dados da API
-│   │   │   ├── app/                  # Configurações iniciais do Next.js
-│   │   │   ├── components/           # Componentes reutilizáveis como botões, listas e formulários
-│   │   │   ├── hooks/                # Hooks personalizados
-│   │   │   ├── lib/                  # Biblioteca para Styled Components
-│   │   │   ├── providers/            # Contextos e provedores globais
-│   │   │   ├── theme/                # Definições de temas e estilos globais
-│   │   │   ├── types/                # Tipagens 
-│   │   │   │   └── styled.d.ts       # Tipagem para Styled Components
-│   │   ├── .eslintrc.json            # Configuração do ESLint
-│   │   ├── .gitignore                # Arquivos e pastas ignorados pelo Git
-│   │   ├── Dockerfile                # Configuração do Docker para o frontend
-│   │   ├── next-env.d.ts             # Tipagens padrão do Next.js
-│   │   ├── next.config.ts            # Configurações do Next.js
-│   │   ├── package-lock.json         # Lockfile para dependências (yarn)
-│   │   ├── package.json              # Lista de dependências e scripts do projeto
-│   │   ├── registry.tsx              # Registro de componentes ou rotas
-│   │   ├── tsconfig.json             # Configuração do TypeScript
-│   │   └── yarn.lock                 # Lockfile para dependências do Yarn
-├── docker-compose.yml                # Arquivo para orquestração de contêineres Docker
-└──  README.MD                        # README da aplicação
+  Backend
+  ```bash
+    DB_USUARIO=usuario_db
+    DB_SENHA=senha_db
+    DB_NOME=db_name
+    
+    API_PORT=porta_que_roda_sua_api
+    
+    SECRET_KEY=sua_secret_key
+  ```
 
-```
+ Frontend
+  ```bash
+    API_URL=url_sua_api
+    APP_PORT=porta_que_roda_seu_front
+
+    HASH_KEY=sua_hash_key
+    BLOCK_KEY=sua_block_key
+  ```
 
 ## 📌 API Endpoints: <a name="api-endpoints"></a>
 
-**Autenticação**
-- POST /login - Autenticar usuário e gerar token JWT.
-
-**Usuários**
-- POST /usuarios - Criar um novo usuário.
-- GET /usuarios - Listar todos os usuários.
-- GET /usuarios/{usuarioId} - Buscar um usuário por ID.
-- PUT /usuarios/{usuarioId} - Atualizar um usuário.
-- DELETE /usuarios/{usuarioId} - Excluir um usuário.
-- POST /usuarios/{usuarioId}/seguir - Seguir um usuário.
-- POST /usuarios/{usuarioId}/parar-de-seguir - Parar de seguir um usuário.
-- GET /usuarios/{usuarioId}/seguidores - Buscar os seguidores de um usuário.
-- GET /usuarios/{usuarioId}/seguindo - Buscar os usuários que um usuário segue.
-- POST /usuarios/{usuarioId}/atualizar-senha - Atualizar senha do usuário logado.
-
-**Publicações**
-
-- POST /publicacoes - Criar uma nova publicação.
-- GET /publicacoes - Listar publicações do feed.
-- GET /publicacoes/{publicacaoId} - Buscar uma publicação por ID.
-- PUT /publicacoes/{publicacaoId} - Atualizar uma publicação.
-- DELETE /publicacoes/{publicacaoId} - Excluir uma publicação.
-- GET /usuarios/{usuarioId}/publicacoes - Buscar publicações de um usuário específico.
-- POST /publicacoes/{publicacaoId}/curtir - Curtir uma publicação.
-- POST /publicacoes/{publicacaoId}/descurtir - Descurtir uma publicação.
+| **Método** | **Endpoint**                                    | **Descrição**                                |
+|------------|-------------------------------------------------|----------------------------------------------|
+| **Autenticação** |                                                 |                                        |
+| POST       | /login                                          | Autenticar usuário e gerar token JWT.        |
+| **Usuários**       |                                                 |                                      | 
+| POST       | /usuarios                                       | Criar um novo usuário.                       |
+| GET        | /usuarios                                       | Listar todos os usuários.                    |
+| GET        | /usuarios/{usuarioId}                           | Buscar um usuário por ID.                    |
+| PUT        | /usuarios/{usuarioId}                           | Atualizar um usuário.                        |
+| DELETE     | /usuarios/{usuarioId}                           | Excluir um usuário.                          |
+| POST       | /usuarios/{usuarioId}/seguir                    | Seguir um usuário.                           |
+| POST       | /usuarios/{usuarioId}/parar-de-seguir           | Parar de seguir um usuário.                  |
+| GET        | /usuarios/{usuarioId}/seguidores                | Buscar os seguidores de um usuário.          |
+| GET        | /usuarios/{usuarioId}/seguindo                  | Buscar os usuários que um usuário segue.     |
+| POST       | /usuarios/{usuarioId}/atualizar-senha           | Atualizar senha do usuário logado.           |
+| **Publicações**    |                                                 |                                      |
+| POST       | /publicacoes                                    | Criar uma nova publicação.                   |
+| GET        | /publicacoes                                    | Listar publicações do feed.                  |
+| GET        | /publicacoes/{publicacaoId}                     | Buscar uma publicação por ID.                |
+| PUT        | /publicacoes/{publicacaoId}                     | Atualizar uma publicação.                    |
+| DELETE     | /publicacoes/{publicacaoId}                     | Excluir uma publicação.                      |
+| GET        | /usuarios/{usuarioId}/publicacoes               | Buscar publicações de um usuário específico. |
+| POST       | /publicacoes/{publicacaoId}/curtir              | Curtir uma publicação.                       |
+| POST       | /publicacoes/{publicacaoId}/descurtir           | Descurtir uma publicação.                    |
