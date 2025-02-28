@@ -1,20 +1,19 @@
 
-# **DevBook**
+# 🚀 **DevBook**
 
 Uma aplicação web para gerenciar suas publicações e seu usuário, com a funcionalidade de criar, visualizar, atualizar e deletar publicações e usuários.
 
-## **Índice**
-1. [Sobre o Projeto](#sobre-o-projeto)
-2. [Tecnologias Utilizadas](#tecnologias-utilizadas)
-3. [Outras Ferramentas](#outras-ferramentas)
-4. [Funcionalidades](#funcionalidades)
-5. [Instalação](#instalação)
-6. [Estrutura de Diretórios](#estrutura-de-diretórios)
-7. [API Endpoints](#api-endpoints)
+## 📝 **Índice**
+1. [📋 Sobre o Projeto](#sobre-o-projeto)
+2. [🛠️ Tecnologias Utilizadas](#tecnologias-utilizadas)
+4. [⚙️ Funcionalidades](#funcionalidades)
+5. [🚀 Instalação](#instalação)
+6. [📁 Estrutura de Diretórios](#estrutura-de-diretórios)
+7. [📌 API Endpoints](#api-endpoints)
 
 ---
 
-## **Sobre o Projeto**
+## **📋 Sobre o Projeto**
 Este é um projeto de gerenciamento de publicações e usuário, desenvolvido para fins de aprendizado e prática com tecnologias web. Ele inclui:
 - Interface responsiva para desktop e dispositivos móveis.
 - CRUD completo de usuários e publicações.
@@ -24,7 +23,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
 
 ---
 
-## **Tecnologias Utilizadas**
+## **🛠️ Tecnologias Utilizadas**
 ### **Frontend**
 - **Linguagem:** [Go](https://go.dev/learn/)
 - **Estilização:** [Bootstrap](https://getbootstrap.com/)
@@ -39,7 +38,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
 
 ---
 
-## **Funcionalidades**
+## **⚙️ Funcionalidades**
 - **Usuários:**
   - Cadastro e login para o usuário.
   - Buscar e visualizar perfis.
@@ -70,7 +69,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
 
 ---
 
-## **Instalação**
+## **🚀 Instalação**
 ### Pré-requisitos
 - **Go** (versão mínima: `1.20`): [Download Go](https://go.dev/)
 - **MySQL** (versão mínima: `8.0`): [Download Git](https://dev.mysql.com/downloads/)
@@ -98,7 +97,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
  - **Inicie o servidor:** go run main.go
  - **O frontend estará disponível em http://localhost:2000**
 
-### Estrututa de Diretórios:
+### 📁 Estrututa de Diretórios:
 
 ```bash 
 todo-list/
@@ -143,7 +142,7 @@ todo-list/
 
 ```
 
-## API Endpoints:
+## 📌 API Endpoints:
 
 **Autenticação**
 - POST /login - Autenticar usuário e gerar token JWT.
