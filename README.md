@@ -13,7 +13,7 @@ Uma aplicação web para gerenciar suas publicações e seu usuário, com a func
 
 ---
 
-## **📋 Sobre o Projeto**
+## **📋 Sobre o Projeto** <a name="sobre-o-projeto"></a>
 Este é um projeto de gerenciamento de publicações e usuário, desenvolvido para fins de aprendizado e prática com tecnologias web. Ele inclui:
 - Interface responsiva para desktop e dispositivos móveis.
 - CRUD completo de usuários e publicações.
@@ -23,7 +23,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
 
 ---
 
-## **🛠️ Tecnologias Utilizadas**
+## **🛠️ Tecnologias Utilizadas** <a name="tecnologias-utilizadas"></a>
 ### **Frontend**
 - **Linguagem:** [Go](https://go.dev/learn/)
 - **Estilização:** [Bootstrap](https://getbootstrap.com/)
@@ -38,7 +38,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
 
 ---
 
-## **⚙️ Funcionalidades**
+## **⚙️ Funcionalidades** <a name="funcionalidades"></a>
 - **Usuários:**
   - Cadastro e login para o usuário.
   - Buscar e visualizar perfis.
@@ -69,7 +69,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
 
 ---
 
-## **🚀 Instalação**
+## **🚀 Instalação** <a name="instalação"></a>
 ### Pré-requisitos
 - **Go** (versão mínima: `1.20`): [Download Go](https://go.dev/)
 - **MySQL** (versão mínima: `8.0`): [Download Git](https://dev.mysql.com/downloads/)
@@ -97,7 +97,7 @@ Este é um projeto de gerenciamento de publicações e usuário, desenvolvido pa
  - **Inicie o servidor:** go run main.go
  - **O frontend estará disponível em http://localhost:2000**
 
-### 📁 Estrututa de Diretórios:
+### 📁 Estrututa de Diretórios: <a name="estrutura-de-diretórios"></a>
 
 ```bash 
 todo-list/
@@ -142,7 +142,7 @@ todo-list/
 
 ```
 
-## 📌 API Endpoints:
+## 📌 API Endpoints: <a name="api-endpoints"></a>
 
 **Autenticação**
 - POST /login - Autenticar usuário e gerar token JWT.
